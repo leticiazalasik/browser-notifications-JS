@@ -1,17 +1,35 @@
 import { Notifyer } from './Notifyer.js';
+import { View } from './View.js';
 
 const Timer = {
-    init() {
-      setInterval(() => {
-        console.log('O timer foi executado!');
-        
-        // Disparando uma notificação
-        Notifyer.notify({
-          title: "Lembrete de Post",
-          body: "É hora de fazer um novo post!",
-        }, 'icon-url-aqui.png');
-      }, 9000);  // Intervalo de 3 segundos (3000ms)
-    }
+  time:0.1*60,
+  currentTime:0,
+  interval:null,
+  
+  timeToMinutes: time => Math.floor(time/60),
+  timeToSeconds: time => time % 60,
+
+  formatTime: time => String(time).padStart(2, '0'),
+
+    init(time) {Timer.time=time || 60*60
+
+     Timer.currentTime=Timer.time
+     Timer.interval=setInterval(Timer.countdown, 1000)  
+},
+
+countdown() {
+  Timer.currentTime = Timer.currentTime - 1;
+  const minutes = Timer.formatTime(Timer.timeToMinutes(Timer.currentTime));
+  const seconds = Timer.formatTime(Timer.timeToSeconds(Timer.currentTime));
+
+  View.render({ minutes, seconds });
+
+  if (Timer.currentTime === 0) {
+    clearInterval(Timer.interval);
+    Notifyer.notify({ title: "Tempo Finalizado!", body: "O timer chegou ao fim." }); // Adicione esta linha
+    return;
+  }
+}
 }
   
 export { Timer };

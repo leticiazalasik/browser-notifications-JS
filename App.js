@@ -5,7 +5,7 @@ const App = {
   
    async start() {
         try {
-            // Solicitar permissão para notificações
+            
             await Notifyer.init();
 
             // Iniciar o timer para disparar notificações
