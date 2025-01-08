@@ -1,35 +1,47 @@
-import { Notifyer } from './Notifyer.js';
-import { View } from './View.js';
+import { Notifyer } from "./Notifyer.js";
+import { View } from "./View.js";
 
 const Timer = {
-  time:0.1*60,
-  currentTime:0,
-  interval:null,
-  
-  timeToMinutes: time => Math.floor(time/60),
-  timeToSeconds: time => time % 60,
+  time: 0, // Tempo total em segundos
+  currentTime: 0,
+  interval: null,
 
-  formatTime: time => String(time).padStart(2, '0'),
+  timeToMinutes: (time) => Math.floor(time / 60),
+  timeToSeconds: (time) => time % 60,
 
-    init(time) {Timer.time=time || 60*60
+  formatTime: (time) => String(time).padStart(2, "0"),
 
-     Timer.currentTime=Timer.time
-     Timer.interval=setInterval(Timer.countdown, 1000)  
-},
+  init(time = 60) { // Define o tempo padrão como 60 segundos
+    Timer.time = time;
+    Timer.currentTime = time;
 
-countdown() {
-  Timer.currentTime = Timer.currentTime - 1;
-  const minutes = Timer.formatTime(Timer.timeToMinutes(Timer.currentTime));
-  const seconds = Timer.formatTime(Timer.timeToSeconds(Timer.currentTime));
+    // Atualiza a visualização inicial
+    const minutes = Timer.formatTime(Timer.timeToMinutes(Timer.currentTime));
+    const seconds = Timer.formatTime(Timer.timeToSeconds(Timer.currentTime));
+    View.render({ minutes, seconds });
 
-  View.render({ minutes, seconds });
+    Timer.interval = setInterval(Timer.countdown, 1000);
+  },
 
-  if (Timer.currentTime === 0) {
-    clearInterval(Timer.interval);
-    Notifyer.notify({ title: "Tempo Finalizado!", body: "O timer chegou ao fim." }); // Adicione esta linha
-    return;
-  }
-}
-}
-  
+  countdown() {
+    Timer.currentTime -= 1;
+
+    const minutes = Timer.formatTime(Timer.timeToMinutes(Timer.currentTime));
+    const seconds = Timer.formatTime(Timer.timeToSeconds(Timer.currentTime));
+
+    // Atualiza a visualização
+    View.render({ minutes, seconds });
+
+    if (Timer.currentTime === 0) {
+      clearInterval(Timer.interval);
+
+      // Dispara a notificação quando o tempo chega a zero
+      Notifyer.notify({
+        title: "Tempo finalizado!",
+        body: "O seu timer terminou!",
+      });
+    }
+  },
+};
+
 export { Timer };

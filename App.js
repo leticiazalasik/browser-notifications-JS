@@ -1,20 +1,18 @@
 import { Notifyer } from "./Notifyer.js";
-import { Timer } from './Timer.js';
+import { Timer } from "./Timer.js";
 
 const App = {
-  
-   async start() {
-        try {
-            
-            await Notifyer.init();
+  async start() {
+    try {
+      // Solicita permissão para notificações
+      await Notifyer.init();
 
-            // Iniciar o timer para disparar notificações
-            Timer.init();
-          
-        } catch (err) {
-            console.log(err.message); 
-        }
+      // Configura o Timer para 10 segundos (ou outro valor que desejar)
+      Timer.init(10); 
+    } catch (err) {
+      console.log(err.message);
     }
-}
+  },
+};
 
 export { App };
